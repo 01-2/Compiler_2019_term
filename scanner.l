@@ -13,7 +13,7 @@ space	[ \t]
 ("int")(" ")({letter}|"_")({letter}|{digit}|"_")*("[") { yylval = strdup(yytext); return _ARR; }
 ("int"|"void")(" ")({letter}|"_")({letter}|{digit}|"_")*("(") { yylval = strdup(yytext); return _START_METHOD_DECL; }
 
-{digit}+	{ yylval.ival = atoi(yytext); return NUMBER; }
+{digit}+	{ yylval.ival = atoi(yytext); return _NUM; }
 {id}"["		{ yylval = strdup(yytext); return _ARRAY_VALUE; }
 {space}+	{ }
 
@@ -27,8 +27,11 @@ space	[ \t]
 "printf"	{ yylval = strdup(yytext); return _PRINTF; }
 "scanf"		{ yylval = strdup(yytext); return _SCANF; }
 
+"="         { yylval = strdup(yytext); return _ASSIGN; }
 "("         { yylval = strdup(yytext); return _LPAREN; }
 ")"         { yylval = strdup(yytext); return _RPAREN; }
+"{"         { yylval = strdup(yytext); return _LBRACKET; }
+"}"         { yylval = strdup(yytext); return _RBRACKET; }
 "["			{ yylval = strdup(yytext); return _LSQUARE_BRACKET; }
 "]"			{ yylval = strdup(yytext); return _RSQUARE_BRACKET; }
 
