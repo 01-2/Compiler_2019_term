@@ -16,7 +16,7 @@ SYM_TABLE* createTable(TABLE _type, char* _name){
     return table;
 }
 
-SYM_SYMBOL* createSymbol(TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, char** _param_types, void* _address){
+SYM_SYMBOL* createSymbol(TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, TYPE* _param_types, void* _address){
     SYM_SYMBOL* symbol = (SYM_SYMBOL *)malloc(sizeof(SYM_SYMBOL));
     
     symbol->type = _type;
@@ -27,9 +27,9 @@ SYM_SYMBOL* createSymbol(TYPE _type, SYMBOL _sym_type, char* _name, int _param_c
     if(_sym_type == SYMBOL.FUNCTION){
         symbol->param_cnt = _param_cnt;
         symbol->param_types = malloc(_param_cnt) * sizeof(char *);
-        for(int i=0; i<param_cnt; i++){
-            symbol->param_types = strdup(_param_types[i]);
-        }
+        for(int i=0; i<param_cnt; i++)
+            symbol->param_types[i] = _param_types[i];
+        
     }
 
     return symbol;
