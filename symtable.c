@@ -13,7 +13,7 @@ SYM_TABLE* createTable(TABLE _type, char* _name){
     table->name = strdup(_name);
     table->child_cnt = 0;
 
-
+    return table;
 }
 
 SYM_SYMBOL* createSymbol(TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, char** _param_types, void* _address){
@@ -32,13 +32,7 @@ SYM_SYMBOL* createSymbol(TYPE _type, SYMBOL _sym_type, char* _name, int _param_c
         }
     }
 
-    current_sym_cnt++;
-}
-
-int addList(list* current, list* prev){
-    prev->prev = current;
-
-    return 1;
+    return symbol;
 }
 
 void* lookupVariable(list* list,  TYPE _type, char* _name){
@@ -67,4 +61,17 @@ void* lookupFunction(list* list, TYPE _type, char* _name){
         return lookupFunction(list->prev, _type, _name);
 
     return nullptr;
+}
+
+int addList(list* current, list* prev){
+    prev->prev = current;
+
+    return 1;
+}
+
+void makeTable(list* list, TABLE _type, char* _name){
+    if(_type == TABLE.GLOBAL)
+        list->prev = nullptr;
+
+    list->table = createTable(_type, _name);
 }

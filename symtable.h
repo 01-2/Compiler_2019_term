@@ -1,6 +1,3 @@
-#define SYM_TABLE_MAX 500
-#define SYM_TABLE_MAX 500
-
 typedef struct symSymbol{
     char* name;
     TYPE type;
@@ -29,3 +26,5 @@ int createSymbol(TYPE *type, SYMBOL sym_type, char* name, int _param_cnt, char**
 int addList(list* current, list* prev);
 void* lookupVariable(list* list,  SYMBOL type, char *name,);
 void* lookupFunction(list* list, TYPE _type, char* _name);
+
+void makeTable(list* list, TABLE _type, char* _name);
