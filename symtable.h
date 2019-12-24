@@ -1,6 +1,5 @@
 #include "common.h"
 
-
 typedef struct symSymbol{
     char* name;
     enum TYPE type;
@@ -24,11 +23,11 @@ typedef struct _list{
     SYM_TABLE* table;
 }list;
 
-SYM_TABLE* createTable(enum TABLE _type, char* _name);
-SYM_SYMBOL* createSymbol(enum TYPE _type, enum SYMBOL _sym_type, char* _name, int _param_cnt, enum TYPE* _param_types, void* _address);
+SYM_TABLE* createTable(TABLE _type, char* _name);
+SYM_SYMBOL* createSymbol(TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, TYPE* _param_types, void* _address);
 int addList(list* current, list* prev);
-void* lookupVariable(list* list, enum SYMBOL _type, char* _name);
-void* lookupFunction(list* list, enum TYPE _type, char* _name);
+void* lookupVariable(list* list, SYMBOL _type, char* _name);
+void* lookupFunction(list* list, TYPE _type, char* _name);
 
-void makeTable(list* list, enum TABLE _type, char* _name);
-int addElement(list* list, enum TYPE _type, enum SYMBOL _sym_type, char* _name, int _param_cnt, enum TYPE* _param_types, void* _address);
+void makeTable(list* list, TABLE _type, char* _name);
+int addElement(list* list, TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, TYPE* _param_types, void* _address);

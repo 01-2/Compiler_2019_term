@@ -12,5 +12,6 @@ int main() {
 	int i = 0;
 	addElement(&l, INT, VARIABLE, "i", 0, nullptr, &i);
 	addElement(&l, INT, VARIABLE, "a", 0, nullptr, &i);
+	addElement(&l, INT, VARIABLE, "i", 0, nullptr, &i);
 
 }
