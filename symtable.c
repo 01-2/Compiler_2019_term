@@ -35,7 +35,6 @@ SYM_SYMBOL* createSymbol(enum TYPE _type, enum SYMBOL _sym_type, char* _name, in
     return symbol;
 }
 
-
 void* lookupFunction(list* list, enum TYPE _type, char* _name){
     SYM_TABLE* node = list->table;
 

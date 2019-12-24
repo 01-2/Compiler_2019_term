@@ -20,14 +20,14 @@ typedef struct symTable{
 } SYM_TABLE;
 
 typedef struct _list{
-    list* prev;
+    struct _list* prev;
     SYM_TABLE* table;
 }list;
 
 SYM_TABLE* createTable(enum TABLE _type, char* _name);
 SYM_SYMBOL* createSymbol(enum TYPE _type, enum SYMBOL _sym_type, char* _name, int _param_cnt, enum TYPE* _param_types, void* _address);
 int addList(list* current, list* prev);
-void* lookupVariable(list* list, enum SYMBOL type, char *name);
+void* lookupVariable(list* list, enum SYMBOL _type, char* _name);
 void* lookupFunction(list* list, enum TYPE _type, char* _name);
 
 void makeTable(list* list, enum TABLE _type, char* _name);
