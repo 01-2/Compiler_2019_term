@@ -64,7 +64,7 @@ void* lookupFunction(list* list, TYPE _type, char* _name){
 }
 
 int addList(list* current, list* prev){
-    prev->prev = current;
+    current->prev = prev;
 
     return 1;
 }
