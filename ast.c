@@ -1,11 +1,16 @@
 #include "ast.h"
+#include "y.tab.h"
 
-node* mkNode(node *left, node *right , int tok){
+node* mkNode(node *left, node *right , int tok, TYPE type, int value){
 	node *newNode = (node *)malloc(sizeof(node));
 	
-	newNode->left = left;
-	newNode->right = right;
 	newNode->token = tok;
+	newNode->value = value;
+	newNode->left = left;
+	newNode->type = type;
+	
+	if(tok != "[some post / pre / unary affix]") // need fix
+		newNode->right = right;	
 
 	return newNode;
 }
