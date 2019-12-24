@@ -26,6 +26,7 @@ space	[ \t]
 
 "printf"	{ yylval = strdup(yytext); return _PRINTF; }
 "scanf"		{ yylval = strdup(yytext); return _SCANF; }
+"return"	{ yylval = strdup(yytext); return _RETURN; }
 
 "="         { yylval = strdup(yytext); return _ASSIGN; }
 "("         { yylval = strdup(yytext); return _LPAREN; }
