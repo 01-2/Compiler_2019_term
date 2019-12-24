@@ -64,7 +64,7 @@ void* lookupFunction(list* list, TYPE _type, char* _name){
     }
 
     if(list->prev != nullptr)
-        return lookupVariable(list->prev, _type, _name);
+        return lookupFunction(list->prev, _type, _name);
 
     return nullptr;
 }
