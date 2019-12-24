@@ -1,0 +1,1 @@
+ADD_EXECUTABLE(app.exe main.c symtable.c main.h)

@@ -1,0 +1,12 @@
+﻿################################################################################
+# 이 .gitignore 파일은 Microsoft(R) Visual Studio에서 자동으로 만들어졌습니다.
+################################################################################
+
+/.vs/Compiler_2019_term/v16/ipch/AutoPCH/68a47194a2edf1c4/SYMTABLE.ipch
+/.vs/Compiler_2019_term/v16/ipch/AutoPCH/d3ef6eb18b1bb720/AST.ipch
+/.vs/slnx.sqlite
+/.vs/ProjectSettings.json
+/.vs/Compiler_2019_term/v16/Browse.VC.opendb
+/.vs/Compiler_2019_term/v16/Browse.VC.db
+/.vs
+/CppProperties.json
