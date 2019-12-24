@@ -1,7 +1,7 @@
 #include "ast.h"
-#include "y.tab.h"
+#include "common.h"
 
-node* mkNode(node *left, node *right , int tok, TYPE type, int value){
+node* mkNode(node *left, node *right , int tok, enum TYPE type, int value){
 	node *newNode = (node *)malloc(sizeof(node));
 	
 	newNode->token = tok;

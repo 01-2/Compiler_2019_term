@@ -1,3 +1,7 @@
+#define nullptr ((void *)0)
+#define true 1
+#define false 0
+
 // type enum;
 enum TYPE { INT, INT_ARRAY, STRING };
 

@@ -1,30 +1,34 @@
+#include "common.h"
+
+
 typedef struct symSymbol{
     char* name;
-    TYPE type;
-    SYMBOL sym_type;
+    enum TYPE type;
+    enum SYMBOL sym_type;
     void* address;
 
     int param_cnt;
-    char **param_types;
+    enum TYPE* param_types;
 } SYM_SYMBOL;
 
 typedef struct symTable{
-    TABLE type;
+    enum TABLE type;
     char* name;
 
-    SYM_SYMBOL* child;
+    SYM_SYMBOL** child;
     int child_cnt;
 } SYM_TABLE;
 
 typedef struct _list{
-    _list* prev;
-    SYM_TABLE table;
+    list* prev;
+    SYM_TABLE* table;
 }list;
 
-int createTable(TABLE type, char* name);
-int createSymbol(TYPE *type, SYMBOL sym_type, char* name, int _param_cnt, char** param_types);
+SYM_TABLE* createTable(enum TABLE _type, char* _name);
+SYM_SYMBOL* createSymbol(enum TYPE _type, enum SYMBOL _sym_type, char* _name, int _param_cnt, enum TYPE* _param_types, void* _address);
 int addList(list* current, list* prev);
-void* lookupVariable(list* list,  SYMBOL type, char *name,);
-void* lookupFunction(list* list, TYPE _type, char* _name);
+void* lookupVariable(list* list, enum SYMBOL type, char *name);
+void* lookupFunction(list* list, enum TYPE _type, char* _name);
 
-void makeTable(list* list, TABLE _type, char* _name);
+void makeTable(list* list, enum TABLE _type, char* _name);
+int addElement(list* list, enum TYPE _type, enum SYMBOL _sym_type, char* _name, int _param_cnt, enum TYPE* _param_types, void* _address);
