@@ -24,8 +24,21 @@ SYM_SYMBOL* createSymbol( TYPE _type,  SYMBOL _sym_type, char* _name, int _param
     symbol->sym_type = _sym_type;
     symbol->size = _size;
 
-    if(_sym_type == VARIABLE)
-        symbol->address = (int *)_address;
+    if(_sym_type == VARIABLE) {
+        void *value;
+        if(_type == INT)
+            value = (int *)malloc(sizeof(int));
+        else if(_type == INT_ARRAY){
+            int *lv = (int *)malloc(sizeof(int) * _size), *rv = (int *)_address;
+
+            for(int i = 0; i < _size; i++)
+                lv[i] = rv[i];
+
+            value = lv;
+        }
+
+        symbol->address = _address;
+    }
     else
         symbol->address = _address;
 
@@ -110,6 +123,7 @@ int addElement(list *list, TYPE _type, SYMBOL _sym_type, char* _name, int _param
         table->child[table->child_cnt] = createSymbol(_type, _sym_type, _name, _param_cnt, _param_types, 0, _address);
         table->child_cnt++;
     }
+    else return false;
 
     return true;
 }
@@ -131,6 +145,5 @@ int modifyElement(list* list, TYPE _type, SYMBOL _sym_type, char* _name, void *v
 
         for(int i=0; i < sym->size; i++)
             lv[i] = rv[i];
-
     }
 }
