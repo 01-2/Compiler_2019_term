@@ -4,21 +4,21 @@
 
 extern list *l;
 
-node* mkNode(TYPE type, int tok, int value, node** n){
+node* createFuncDeclNode(int tok, Type type, char* name, node** n){
     /*           funcDecl
-        /         |      |     \        \
-    returnType Name  param_num param[0] ... param[param_num]
-                                  |
-                                 ID(name)
-    */
+    /         |      |     \        \
+returnType Name  param_num param[0] ... param[param_num]
+                              |
+                             ID(name)
+*/
     if(tok == "funcDecl"){
         TYPE func_type;
         char *func_name;
         int func_param_cnt;
         TYPE* param_types;
 
-        func_type = n[0]->value;
-        func_name = strdup(n[1]->value);
+        func_type = type;
+        func_name = strdup(name);
         func_param_cnt = n[2]->value;
 
         param_types = (TYPE *)malloc(sizeof(TYPE) * func_param_cnt);
@@ -56,6 +56,22 @@ node* mkNode(TYPE type, int tok, int value, node** n){
 
         return new_node;
     }
+
+}
+
+node* mkNode(TYPE type, int tok, int value, node** n){
+    /*          varDecl
+     *    varType   varName    varValue
+     *       |         |           |
+     *     Type       ID           ...
+     */
+
+    if(tok == "varDecl"){
+        Type var_type;
+        char* var_name;
+
+    }
+
 
 
 }
