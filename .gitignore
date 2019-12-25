@@ -10,3 +10,5 @@
 /.vs/Compiler_2019_term/v16/Browse.VC.db
 /.vs
 /CppProperties.json
+/out/build/x64-Debug
+/CMakeSettings.json
