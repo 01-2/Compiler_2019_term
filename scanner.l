@@ -7,16 +7,18 @@
 digit	[0-9] 
 letter	[a-zA-Z]
 space	[ \t]
+id		([a-zA-Z]|[_])([a-zA-Z]|[0-9]|[_])* 
 %%
 
-("int")(" ")({letter}|"_")({letter}|{digit}|"_")* { yylval = strdup(yytext); return _VAR; }
-("int")(" ")({letter}|"_")({letter}|{digit}|"_")*("[") { yylval = strdup(yytext); return _ARR; }
-("int"|"void")(" ")({letter}|"_")({letter}|{digit}|"_")*("(") { yylval = strdup(yytext); return _START_METHOD_DECL; }
+("int")(" "){id} { yylval = strdup(yytext); return _VAR; }
+("int")(" "){id}("[") { yylval = strdup(yytext); return _ARR; }
+("int"|"void"){id}("(") { yylval = strdup(yytext); return _START_METHOD_DECL; }
 
 {digit}+	{ yylval.ival = atoi(yytext); return _NUM; }
 {id}"["		{ yylval = strdup(yytext); return _ARRAY_VALUE; }
 {space}+	{ }
 
+"main()"	{ yylval = strdup(yytext); return _MAIN_F; }
 "void"		{ yylval = strdup(yytext); return _VOID; }
 "int"		{ yylval = strdup(yytext); return _TYPE; }
 
