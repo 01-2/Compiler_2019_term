@@ -27,8 +27,9 @@ SYM_SYMBOL* createSymbol( TYPE _type,  SYMBOL _sym_type, char* _name, int _param
     if(_sym_type == VARIABLE) {
         void *value;
         if(_type == INT) {
-            value = (int *) malloc(sizeof(int));
+            value = (int *) malloc(sizeof(void *));
             *(int *)value = *(int *)_address;
+
         }
         else if(_type == INT_ARRAY){
             int *lv = (int *)malloc(sizeof(int) * _size), *rv = (int *)_address;
@@ -45,7 +46,7 @@ SYM_SYMBOL* createSymbol( TYPE _type,  SYMBOL _sym_type, char* _name, int _param
         symbol->address = _address;
 
 
-    if(_sym_type == FUNCTION){
+    if(_sym_type == FUNCTION || _sym_type == IF || _sym_type == WHILE || _sym_type == ELSE){
         symbol->param_cnt = _param_cnt;
 
         if(_param_cnt == 0) symbol->param_types = nullptr;
@@ -58,13 +59,13 @@ SYM_SYMBOL* createSymbol( TYPE _type,  SYMBOL _sym_type, char* _name, int _param
     return symbol;
 }
 
-SYM_SYMBOL* lookupFunction(list* list, TYPE _type, char* _name, int _param_cnt, TYPE* _params){
+SYM_SYMBOL* lookupFunction(list* list, TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, TYPE* _params){
     SYM_TABLE* node = list->table;
 
     for(int i = 0; i < node->child_cnt; i++){
-        if(node->child[i]->sym_type != FUNCTION) continue;
+        if(node->child[i]->sym_type == VARIABLE) continue;
 
-        if (!strcmp(_name, node->child[i]->name) && node->child[i]->sym_type == FUNCTION && node->child[i]->type == _type && node->child[i]->param_cnt == _param_cnt) {
+        if (!strcmp(_name, node->child[i]->name) && node->child[i]->sym_type == _sym_type && node->child[i]->type == _type && node->child[i]->param_cnt == _param_cnt) {
             if(_param_cnt == 0) return node->child[i];
 
             for(int j = 0; j< _param_cnt; j++) {
@@ -75,7 +76,7 @@ SYM_SYMBOL* lookupFunction(list* list, TYPE _type, char* _name, int _param_cnt, 
     }
 
     if(list->prev != nullptr)
-        return lookupFunction(list->prev, _type, _name, _param_cnt, _params);
+        return lookupFunction(list->prev, _type,_sym_type, _name, _param_cnt, _params);
 
     return nullptr;
 }
@@ -129,11 +130,12 @@ int addElement(list *l, TYPE _type, SYMBOL _sym_type, char* _name, int _param_cn
         table->child[table->child_cnt]->initialized = true;
         table->child_cnt++;
     }
-    else if (_sym_type == FUNCTION) {
+    else if (_sym_type == FUNCTION || _sym_type == IF || _sym_type == WHILE || _sym_type == ELSE) {
         list *new_list;
 
-        if (lookupFunction(l, _sym_type, _name, _param_cnt, _param_types) != nullptr) return 1;
-        makeTable(new_list, T_FUNCTION, _name);
+        if (lookupFunction(l, _type, _sym_type, _name,  _param_cnt, _param_types) != nullptr) return false;
+        new_list = (list *)malloc(sizeof(list));
+        makeTable(new_list, _sym_type, _name);
 
         if(table->child_cnt == 0)
             table->child = (SYM_SYMBOL *)malloc(sizeof(SYM_SYMBOL));

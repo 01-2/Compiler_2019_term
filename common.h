@@ -9,9 +9,9 @@
 typedef enum TYPE { INT, INT_ARRAY, VOID }TYPE;
 
 // symbol type enum
-typedef enum SYMBOL{ VARIABLE, FUNCTION }SYMBOL;
+typedef enum SYMBOL{ VARIABLE, FUNCTION, IF, WHILE, ELSE }SYMBOL;
 
 // table type enum
-typedef enum TABLE{ GLOBAL, T_FUNCTION, IF, WHILE}TABLE;
+typedef enum TABLE{ GLOBAL, T_FUNCTION, T_IF, T_WHILE, T_ELSE}TABLE;
 
 #endif
