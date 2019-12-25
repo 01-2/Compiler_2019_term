@@ -4,14 +4,16 @@
 
 extern list *l;
 
-node* createFuncDeclNode(int tok, Type type, char* name, node** n){
+node* createFuncDeclNode(int tok, TYPE type, char* name, node** n){
     /*           funcDecl
     /         |      |     \        \
 returnType Name  param_num param[0] ... param[param_num]
                               |
                              ID(name)
 */
-    if(tok == "funcDecl"){
+
+ //   if(tok == "funcDecl"){ // must be modified as bison token
+        /*
         TYPE func_type;
         char *func_name;
         int func_param_cnt;
@@ -47,43 +49,108 @@ returnType Name  param_num param[0] ... param[param_num]
                 error_handle(buf);
             }
         }
-
+        */
         node* new_node = (node *)malloc(sizeof(node));
         new_node->token = tok;
+        new_node->sym = FUNCTION;
+        new_node->type = type;
         new_node->child = (node **)malloc(sizeof(node) * (3 + func_param_cnt));
         for(int i = 0; i< 3 + func_param_cnt; i++)
             new_node->child[i] = n[i];
 
         return new_node;
-    }
+ //   }
 
 }
 
-node* mkNode(TYPE type, int tok, int value, node** n){
+node* createArithmeticNode(int tok, int type, node* n1, node* n2) { // plus, minus, div, mul, assign
+    node* n = (node*)malloc(sizeof(node));
+    
+    n->token = tok;
+    n->type = type;
+    
+    n->child = malloc(sizeof(node) * 2);
+    n->child[0] = n1;
+    n->child[1] = n2;
+
+    return n;
+}
+
+node* createUnaryArithmeticNode(int tok, node* n1) {
+    node* n = (node*)malloc(sizeof(node));
+
+    n->token = tok;
+
+    n->child = malloc(sizeof(node));
+    n->child[0] = n1;
+
+    return n;
+}
+
+node* createAffixNode(int tok, node* n1) {
+    node* n = malloc(sizeof(node));
+
+    n->token = tok;
+    n->child = malloc(sizeof(node));
+    n->child[0] = n1;
+
+    return n;
+}
+
+node* createConditionNode(int tok, node* n1, node* n2) { // <, >, ||, &&, ==
+    node* n = malloc(sizeof(node));
+
+    n->token = tok;
+    n->type = type;
+
+    n->child = malloc(sizeof(node) * 2);
+    n->child[0] = n1;
+    n->child[1] = n2;
+
+    return n;
+}
+
+node* createVarDeclNode(TYPE type, int tok, int size, char *var_name, void* value){ //as leaf
     /*          varDecl
      *    varType   varName    varValue
      *       |         |           |
      *     Type       ID           ...
      */
 
-    if(tok == "varDecl"){
+        /*
+        node* n = (node *)malloc(sizeof(node));
+
         Type var_type;
         char* var_name;
 
-    }
+        SYM_SYMBOL* sym = lookupFunction(l, type, FUNCTION, func_name, 0, nullptr);        
+        list* table = sym->address;
+        int res;
+        if (table == nullptr) {
+            char* buf;
+            sprintf(buf, "Error : Line %d. Can't find function \"%s\".", func_name);
+            error_handle(buf);
+        }
 
+        res = createSymbol(type, VARIABLE, func_name, 0, nullptr, size, value);
+        */
+    node* n = (node*)malloc(sizeof(node));
+    n->type = type;
+    n->sym = VARIABLE;
+    n->size = size;
+    n->name = strdup(var_name);
+    n->value = value;
+    n->token = tok;
 
-
+    return n;
 }
 
-node* mkLeaf(TYPE type, int tok, int value){
-    node *newNode = (node *)malloc(sizeof(node));
+node* createConstNode(TYPE type, int tok, int size, void* value) {
+    node* n = (node*)malloc(sizeof(node));
+    n->type = type;
+    n->value = (int *)value;
 
-    newNode->token = tok;
-    newNode->value = value;
-    newNode->type = type;
-
-    return newNode;
+    return n;
 }
 
 
