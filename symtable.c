@@ -123,9 +123,9 @@ int addElement(list *l, TYPE _type, SYMBOL _sym_type, char* _name, int _param_cn
             table->child = p;
         }
         if(_type == INT_ARRAY)
-            table->child[table->child_cnt] = createSymbol(_type, _sym_type, _name, 0,  nullptr, _size, _address);
+            table->child[table->child_cnt] = createSymbol(_type, _sym_type, _name, 0,  nullptr,  _size, _address);
         else
-            table->child[table->child_cnt] = createSymbol(_type, _sym_type, _name, 0, nullptr, 0, _address);
+            table->child[table->child_cnt] = createSymbol(_type, _sym_type, _name, 0, nullptr,  0, _address);
 
         table->child[table->child_cnt]->initialized = true;
         table->child_cnt++;
@@ -143,7 +143,8 @@ int addElement(list *l, TYPE _type, SYMBOL _sym_type, char* _name, int _param_cn
             SYM_SYMBOL** p = realloc(table->child, (table->child_cnt + 1) * sizeof(SYM_SYMBOL));
             table->child = p;
         }
-        table->child[table->child_cnt] = createSymbol(_type, _sym_type, _name, _param_cnt, _param_types, 0, new_list);
+        table->child[table->child_cnt] = createSymbol(_type, _sym_type, _name, _param_cnt, _param_types,  0, new_list);
+
         table->child_cnt++;
 
         new_list->prev = l;

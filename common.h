@@ -14,4 +14,6 @@ typedef enum SYMBOL{ VARIABLE, FUNCTION, IF, WHILE, ELSE }SYMBOL;
 // table type enum
 typedef enum TABLE{ GLOBAL, T_FUNCTION, T_IF, T_WHILE, T_ELSE}TABLE;
 
+typedef enum AST_TYPE{};
+
 #endif

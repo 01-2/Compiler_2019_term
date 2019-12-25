@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "common.h"
+//#include "y.tab.h"
 
 typedef struct node{
-	struct node *left;
-	struct node *right;
+    struct node **left;
 	int token;
 	int value;
 	enum TYPE type;
