@@ -18,10 +18,12 @@ int main() {
 
     addElement(&l, INT, FUNCTION, "func", 0, nullptr, 0, nullptr);
     SYM_SYMBOL *addr = lookupFunction(&l, INT, "func", 0, nullptr);
-    addElement(&addr->address, INT, VARIABLE, "i", 0, nullptr, 0, &i);
+    addElement(addr->address, INT, VARIABLE, "i", 0, nullptr, 0, &i);
+    addElement(addr->address, INT, VARIABLE, "d", 0, nullptr, 10, &d);
 
     for(int i = 0 ; i < 10; i++) {
-        int *p =
+        list *list = addr->address;
+        int *p = (int *)list->table->child[0]->address;
 
         printf("%d\n", p[i]);
     }
