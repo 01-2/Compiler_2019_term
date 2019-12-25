@@ -7,8 +7,12 @@ typedef struct node{
     struct node **left;
 	int token;
 	int value;
-	enum TYPE type;
+	char *name;
+	int size;
+	TYPE type;
+	SYMBOL sym;
 }node;
-node* mkNode(node *left, node *right, int tok, enum TYPE type, int value);
+node* mkNode(node *left, node *right, int tok, TYPE type, int value);
+node * mkLeaf(TYPE type, int tok, int value);
 void printTree(node *tree, int tctr);
 

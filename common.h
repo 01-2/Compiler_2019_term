@@ -5,6 +5,8 @@
 #define true 1
 #define false 0
 
+extern current_line;
+
 // type enum;
 typedef enum TYPE { INT, INT_ARRAY, VOID }TYPE;
 
@@ -14,6 +16,7 @@ typedef enum SYMBOL{ VARIABLE, FUNCTION, IF, WHILE, ELSE }SYMBOL;
 // table type enum
 typedef enum TABLE{ GLOBAL, T_FUNCTION, T_IF, T_WHILE, T_ELSE}TABLE;
 
-typedef enum AST_TYPE{};
+void error_handle(char *msg);
+
 
 #endif

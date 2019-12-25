@@ -1,19 +1,69 @@
 #include "ast.h"
+#include "symtable.h"
 #include "common.h"
 
-node* mkNode(node *left, node *right , int tok, enum TYPE type, int value){
-	node *newNode = (node *)malloc(sizeof(node));
-	
-	newNode->token = tok;
-	newNode->value = value;
-	newNode->left = left;
-	newNode->type = type;
-	
-	if(tok != "[some post / pre / unary affix]") // need fix
-		newNode->right = right;	
+extern list *l;
 
-	return newNode;
+node* mkNode(TYPE type, int tok, int value, node** n){
+    /*           funcDecl
+        /         |      |     \        \
+    returnType Name  param_num param[0] ... param[param_num]
+                                  |
+                                 ID(name)
+    */
+
+    if(tok == "funcDecl"){
+        TYPE func_type;
+        char *func_name;
+        int func_param_cnt;
+        TYPE* param_types;
+
+        func_type = n[0]->value;
+        func_name = strdup(n[1]->value);
+        func_param_cnt = n[2]->value;
+
+        param_types = (TYPE *)malloc(sizeof(TYPE) * func_param_cnt);
+        for(int i = 0; i< func_param_cnt; i++){
+            param_types[i] = n[i+3]->type;
+        }
+
+        SYM_SYMBOL* addr = lookupFunction(l, func_type, FUNCTION, func_name, func_param_cnt, param_types);
+        if(addr == nullptr) {
+            char *buf;
+            sprintf(buf, "Error : Line %d. Function Declaration duplicated.", current_line);
+            error_handle(buf);
+        }
+
+        list* new_list = addr->address;
+        for(int i = 0; i < func_param_cnt; i++){
+            int size = 0;
+            if(n[i+3]->type == INT_ARRAY){
+                size = n[i+3]->size;
+            }
+
+            int res = addElement(new_list, param_types[i], VARIABLE, n[i+3]->name, 0, nullptr, size, &n[i+3]->value);
+            if(res == nullptr){
+                char *buf;
+                sprintf(buf, "Error : Line %d. Something wrong with initialize function %s's parameter", current_line, func_name);
+                error_handle(buf);
+            }
+        }
+
+    }
+
+
 }
+
+node* mkLeaf(TYPE type, int tok, int value){
+    node *newNode = (node *)malloc(sizeof(node));
+
+    newNode->token = tok;
+    newNode->value = value;
+    newNode->type = type;
+
+    return newNode;
+}
+
 
 void printTree(node *tree, int tctr){
 	int i = 0;
