@@ -5,6 +5,7 @@ typedef struct symSymbol{
     enum TYPE type;
     enum SYMBOL sym_type;
     void* address;
+    int size;
 
     int param_cnt;
     enum TYPE* param_types;
@@ -24,10 +25,11 @@ typedef struct _list{
 }list;
 
 SYM_TABLE* createTable(TABLE _type, char* _name);
-SYM_SYMBOL* createSymbol(TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, TYPE* _param_types, void* _address);
+SYM_SYMBOL* createSymbol(TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, TYPE* _param_types, int _size, void* _address);
 int addList(list* current, list* prev);
-void* lookupVariable(list* list, SYMBOL _type, char* _name);
-void* lookupFunction(list* list, TYPE _type, char* _name);
+SYM_SYMBOL* lookupVariable(list* list, TYPE _type, char* _name);
+SYM_SYMBOL* lookupFunction(list* list, TYPE _type, char* _name);
 
 void makeTable(list* list, TABLE _type, char* _name);
-int addElement(list* list, TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, TYPE* _param_types, void* _address);
+int addElement(list* list, TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, TYPE* _param_types, int _size, void* _address);
+int modifyElement(list* list, TYPE _type, SYMBOL _sym_type, char* _name, void* value);
