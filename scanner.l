@@ -49,6 +49,7 @@ space	[ \t]
 "&&"        { yylval = strdup(yytext); return _AND; }
 "||"        { yylval = strdup(yytext); return _OR; }
 
+","         { yylval = strdup(yytext); return _COMMA; }
 ";"         { yylval = strdup(yytext); return _SEMICOLON; }
 \n			{ line++; }
 %%
