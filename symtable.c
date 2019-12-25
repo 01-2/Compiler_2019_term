@@ -26,8 +26,10 @@ SYM_SYMBOL* createSymbol( TYPE _type,  SYMBOL _sym_type, char* _name, int _param
 
     if(_sym_type == VARIABLE) {
         void *value;
-        if(_type == INT)
-            value = (int *)malloc(sizeof(int));
+        if(_type == INT) {
+            value = (int *) malloc(sizeof(int));
+            *(int *)value = *(int *)_address;
+        }
         else if(_type == INT_ARRAY){
             int *lv = (int *)malloc(sizeof(int) * _size), *rv = (int *)_address;
 
@@ -37,7 +39,7 @@ SYM_SYMBOL* createSymbol( TYPE _type,  SYMBOL _sym_type, char* _name, int _param
             value = lv;
         }
 
-        symbol->address = _address;
+        symbol->address = value;
     }
     else
         symbol->address = _address;
