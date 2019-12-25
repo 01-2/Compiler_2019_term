@@ -6,7 +6,7 @@
 #define false 0
 
 // type enum;
-typedef enum TYPE { INT, INT_ARRAY, STRING }TYPE;
+typedef enum TYPE { INT, INT_ARRAY, VOID }TYPE;
 
 // symbol type enum
 typedef enum SYMBOL{ VARIABLE, FUNCTION }SYMBOL;

@@ -43,9 +43,12 @@ SYM_SYMBOL* createSymbol( TYPE _type,  SYMBOL _sym_type, char* _name, int _param
         symbol->address = _address;
 
 
-    if(_sym_type == T_FUNCTION){
+    if(_sym_type == FUNCTION){
         symbol->param_cnt = _param_cnt;
-        symbol->param_types = ( TYPE *)malloc(_param_cnt * sizeof( TYPE *));
+
+        if(_param_cnt == 0) symbol->param_types = nullptr;
+        else symbol->param_types = ( TYPE *)malloc(_param_cnt * sizeof( TYPE *));
+
         for(int i=0; i < _param_cnt; i++)
             symbol->param_types[i] = _param_types[i];
     }
@@ -53,16 +56,24 @@ SYM_SYMBOL* createSymbol( TYPE _type,  SYMBOL _sym_type, char* _name, int _param
     return symbol;
 }
 
-SYM_SYMBOL* lookupFunction(list* list, TYPE _type, char* _name){
+SYM_SYMBOL* lookupFunction(list* list, TYPE _type, char* _name, int _param_cnt, TYPE* _params){
     SYM_TABLE* node = list->table;
 
     for(int i = 0; i < node->child_cnt; i++){
-        if (!strcmp(_name, node->child[i]->name) && node->child[i]->sym_type == T_FUNCTION && node->child[i]->type == _type)
-            return node->child[i];
+        if(node->child[i]->sym_type != FUNCTION) continue;
+
+        if (!strcmp(_name, node->child[i]->name) && node->child[i]->sym_type == FUNCTION && node->child[i]->type == _type && node->child[i]->param_cnt == _param_cnt) {
+            if(_param_cnt == 0) return node->child[i];
+
+            for(int j = 0; j< _param_cnt; j++) {
+                if(_params[j] != node->child[i]->param_types[j]) break;
+                return node->child[i];
+            }
+        }
     }
 
     if(list->prev != nullptr)
-        return lookupFunction(list->prev, _type, _name);
+        return lookupFunction(list->prev, _type, _name, _param_cnt, _params);
 
     return nullptr;
 }
@@ -96,32 +107,42 @@ void makeTable(list* list, TABLE _type, char* _name){
     list->table = createTable(_type, _name);
 }
 
-int addElement(list *list, TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, TYPE* _param_types, int _size, void* _address) {
-    SYM_TABLE* table = list->table;
-    
+int addElement(list *l, TYPE _type, SYMBOL _sym_type, char* _name, int _param_cnt, TYPE* _param_types, int _size, void* _address) {
+    SYM_TABLE* table = l->table;
+
     if (_sym_type == VARIABLE) {
-        if (lookupVariable(list, _type, _name) != nullptr) return 1;
+        if (lookupVariable(l, _type, _name) != nullptr) return false;
 
         if(table->child_cnt == 0)
             table->child = (SYM_SYMBOL *)malloc(sizeof(SYM_SYMBOL));
-        else
-            realloc(table->child, sizeof(SYM_SYMBOL *) * (table->child_cnt+1));
-
+        else {
+            SYM_SYMBOL **p = realloc(table->child, (table->child_cnt + 1) * sizeof(SYM_SYMBOL));
+            table->child = p;
+        }
         if(_type == INT_ARRAY)
             table->child[table->child_cnt] = createSymbol(_type, _sym_type, _name, 0,  nullptr, _size, _address);
         else
             table->child[table->child_cnt] = createSymbol(_type, _sym_type, _name, 0, nullptr, 0, _address);
+
+        table->child[table->child_cnt]->initialized = true;
         table->child_cnt++;
     }
-    else if (_sym_type == T_FUNCTION) {
-        if (lookupFunction(_name, _sym_type, _name) != nullptr) return 1;
+    else if (_sym_type == FUNCTION) {
+        list *new_list;
+
+        if (lookupFunction(l, _sym_type, _name, _param_cnt, _param_types) != nullptr) return 1;
+        makeTable(new_list, T_FUNCTION, _name);
 
         if(table->child_cnt == 0)
             table->child = (SYM_SYMBOL *)malloc(sizeof(SYM_SYMBOL));
-        else
-            realloc(table->child, (table->child_cnt+1) * sizeof(SYM_SYMBOL));
-        table->child[table->child_cnt] = createSymbol(_type, _sym_type, _name, _param_cnt, _param_types, 0, _address);
+        else {
+            SYM_SYMBOL** p = realloc(table->child, (table->child_cnt + 1) * sizeof(SYM_SYMBOL));
+            table->child = p;
+        }
+        table->child[table->child_cnt] = createSymbol(_type, _sym_type, _name, _param_cnt, _param_types, 0, new_list);
         table->child_cnt++;
+
+        new_list->prev = l;
     }
     else return false;
 
