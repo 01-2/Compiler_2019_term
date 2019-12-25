@@ -11,7 +11,6 @@ node* mkNode(TYPE type, int tok, int value, node** n){
                                   |
                                  ID(name)
     */
-
     if(tok == "funcDecl"){
         TYPE func_type;
         char *func_name;
@@ -42,13 +41,20 @@ node* mkNode(TYPE type, int tok, int value, node** n){
             }
 
             int res = addElement(new_list, param_types[i], VARIABLE, n[i+3]->name, 0, nullptr, size, &n[i+3]->value);
-            if(res == nullptr){
+            if(res == false){
                 char *buf;
                 sprintf(buf, "Error : Line %d. Something wrong with initialize function %s's parameter", current_line, func_name);
                 error_handle(buf);
             }
         }
 
+        node* new_node = (node *)malloc(sizeof(node));
+        new_node->token = tok;
+        new_node->child = (node **)malloc(sizeof(node) * (3 + func_param_cnt));
+        for(int i = 0; i< 3 + func_param_cnt; i++)
+            new_node->child[i] = n[i];
+
+        return new_node;
     }
 
 

@@ -4,7 +4,7 @@
 //#include "y.tab.h"
 
 typedef struct node{
-    struct node **left;
+    struct node **child;
 	int token;
 	int value;
 	char *name;
