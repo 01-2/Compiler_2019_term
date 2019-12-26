@@ -36,6 +36,7 @@
 %token _PLUS
 %token _MINUS
 %token _TIMES
+%token _DIV
 %token _RELOP
 %token _AND
 %token _OR

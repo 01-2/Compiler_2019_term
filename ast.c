@@ -4,6 +4,23 @@
 
 extern list *l;
 
+node* createMainDeclNode(int tok, int stmt_cnt, node** stmt){
+    node* new_node = (node *)malloc(sizeof(node));
+    new_node->token = tok;
+    new_node->sym = FUNCTION;
+    new_node->ast_type = MAINDECL;
+    new_node->type = VOID;
+
+
+    new_node->child = (node **)malloc(sizeof(node *) * (func_param_cnt));
+    new_node->child_cnt = stmt_cnt;
+    for(int i = 0; i< stmt_cnt; i++)
+        new_node->child[i] = n[i];
+
+    return new_node;
+}
+
+
 node* createFuncDeclNode(int tok, TYPE type, char* name, node** n){
     /*           funcDecl
     /         |      |     \        \
@@ -53,14 +70,30 @@ returnType Name  param_num param[0] ... param[param_num]
         node* new_node = (node *)malloc(sizeof(node));
         new_node->token = tok;
         new_node->sym = FUNCTION;
+        new_node->ast_type = FUNCDECL;
         new_node->type = type;
-        new_node->child = (node **)malloc(sizeof(node) * (3 + func_param_cnt));
+
+        new_node->child = (node **)malloc(sizeof(node) * (func_param_cnt));
         for(int i = 0; i< 3 + func_param_cnt; i++)
             new_node->child[i] = n[i];
 
         return new_node;
  //   }
+}
 
+node* createFuncBodyNode(int tok, int type, int stmt_cnt, node** stmt){
+    node *n = malloc(sizeof(node));
+    n->token = tok;
+    n->sym = FUNCTION;
+    n->type = type;
+    n->ast_type = FUNCBODY;
+
+    n->child = malloc(sizeof(node *) * stmt_cnt);
+    n->child_cnt = stmt_cnt;
+    for(int i = 0; i < stmt_cnt; i++)
+        n->child[i] = stmt[i];
+
+    return node;
 }
 
 node* createArithmeticNode(int tok, int type, node* n1, node* n2) { // plus, minus, div, mul, assign
@@ -68,6 +101,7 @@ node* createArithmeticNode(int tok, int type, node* n1, node* n2) { // plus, min
     
     n->token = tok;
     n->type = type;
+    n->ast_type = ARITH;
     
     n->child = malloc(sizeof(node) * 2);
     n->child[0] = n1;
@@ -76,13 +110,23 @@ node* createArithmeticNode(int tok, int type, node* n1, node* n2) { // plus, min
     return n;
 }
 
+
+
+
 node* createUnaryArithmeticNode(int tok, node* n1) {
     node* n = (node*)malloc(sizeof(node));
 
     n->token = tok;
+    n->ast_type = UNARY;
 
     n->child = malloc(sizeof(node));
-    n->child[0] = n1;
+    n->ch(node));
+
+    n->token = tok;
+    n->type = type;
+
+    n->child = malloc(sizeof(node) * 2);
+    n->child[0] = n1;ild[0] = n1;
 
     return n;
 }
@@ -91,6 +135,8 @@ node* createAffixNode(int tok, node* n1) {
     node* n = malloc(sizeof(node));
 
     n->token = tok;
+    n->ast_type = AFFIX;
+
     n->child = malloc(sizeof(node));
     n->child[0] = n1;
 
@@ -101,14 +147,40 @@ node* createConditionNode(int tok, node* n1, node* n2) { // <, >, ||, &&, ==
     node* n = malloc(sizeof(node));
 
     n->token = tok;
-    n->type = type;
-
-    n->child = malloc(sizeof(node) * 2);
+    n->ast_typt = CONDITION;
+    n->child = malloc(sizeof(node *) * 2);
     n->child[0] = n1;
     n->child[1] = n2;
 
     return n;
 }
+
+node* createIfDecl(int tok, int stmt_cnt, node** stmt){
+    node* n = malloc(sizeof(node));
+
+    n->token = tok;
+    n->ast_type = IFDECL;
+    n->child = malloc(sizeof(node *) stmt_cnt);
+    n->child_cnt = stmt_cnt;
+    for(int i = 0; i < stmt_cnt; i++)
+        child[i] = stmt[i];
+
+    return n;
+}
+
+node* createWhileDecl(int tok, int stmt_cnt, node** stmt){
+    node* n = malloc(sizeof(node));
+
+    n->token = tok;
+    n->ast_type = WHILEDECL;
+    n->child = malloc(sizeof(node *) stmt_cnt);
+    n->child_cnt = stmt_cnt;
+    for(int i = 0; i < stmt_cnt; i++)
+        child[i] = stmt[i];
+
+    return n;
+}
+
 
 node* createVarDeclNode(TYPE type, int tok, int size, char *var_name, void* value){ //as leaf
     /*          varDecl
@@ -149,25 +221,128 @@ node* createConstNode(TYPE type, int tok, int size, void* value) {
     node* n = (node*)malloc(sizeof(node));
     n->type = type;
     n->value = (int *)value;
+    n->ast_type = CONSTANT;
 
     return n;
 }
 
+void printSpace(int cnt){
+    for(int i = 0; i < cnt ; i++)
+        printf("    ");
 
-void printTree(node *tree, int tctr){
-	int i = 0;
-	for(i = 0; i < tctr; i++) printf("\t");
-	if((tree->token > -1) && (tree->token < 10))
-		printf("Int(%d)\n", tree->token);
-	else if(tree->token > 100){
-		printf("Uop(-)\n");
-		printf("\t\tInt(%d)\n", tree->token-100);
-	}
-	else if(tree->token > 10)
-		printf("Op(%c)\n", tree->token);
+}
 
-	if (tree->left)
-		printTree(tree->left, tctr+1);
-	if (tree->right)
-		printTree(tree->right, tctr+1);
+int cnt = 0;
+
+void printTree(node *tree){
+    printSpace(cnt);
+    cnt++;
+    if(tree->ast_type == MAINDECL){
+        printf("MainDecl()\n")
+        for(int i = 0; i < tree->child_cnt; i++)
+            printTree(node[i]);
+    }
+    if(tree->ast_type == FUNCDECL){
+        printf("%s", tree->name); printf("() DECL\n");
+        for(int i = 0; i < tree->child_cnt; i++)
+            printTree(node[i]);
+    }
+    if(tree->ast_type == FUNCBODY){
+        printf("%s", tree->name); printf("() BODY\n");
+        for(int i = 0; i < tree->child_cnt; i++);
+    }
+    if(tree=>ast_type == VARDECL){
+        if (tree->type == INT) {
+            printf("Var(");
+            printf("%s", tree->name);
+            printf(") : ");
+            printf("%d\n", tree->value);
+        }
+        else if (tree->type == INT_ARRAY){
+            printf("Var(");
+            printf("%s", tree->name);
+            printf(") : { ");
+            for(int i = 0; i<tree->child_cnt; i++){
+                printf("%d, ", tree->child[i]);
+            }
+            printf("}\n");
+        }
+    }
+    if(tree->ast_type == IFDECL){
+        printf("IF\n");
+        for(int i = 0; i < tree->child_cnt; i++)
+            printTree(tree->child[i]);
+    }
+    if(tree->ast_type == WHILEDECL){
+        printf("WHILE\n");
+        for(int i = 0 ; i < tree->child_cnt; i++)
+            printTree(tree->child[i]);
+    }
+    else if(tree->ast_type == ARITH) {
+        if (tree->token == _ADD) {
+            printf("BINARY(+)\n")
+            printTree(tree->child[0]);
+            printTree(tree->child[1]);
+        } else if (tree->token == _MINUS) {
+            printf("BINARY(-)\n");
+            printTree(tree->child[0]);
+            printTree(tree->child[1]);
+        } else if (tree->token == _TIMES) {
+            printf("BINARY(*)\n");
+            printTree(tree->child[0]);
+            printTree(tree->child[1]);
+        } else if (tree->token == _DIV) {
+            printf("BINARY(/)\n");
+            printTree(tree->child[0]);
+            printTree(tree->child[1]);
+        }
+    }
+    else if(tree->ast_type == UNARY){
+        if(tree->token == _ADD) {
+            printf("UOP(+)\n");
+            printTree(tree->child[0]);
+        }
+        if(tree->token == _MINUS){
+            printf("UOP(-)\n");
+            printTree(tree->child[0]);
+        }
+        if(tree->token == _NOT){
+            printf("UOP(!)\n");
+            printTree(tree->child[0]);
+        }
+    }
+    else if(tree->ast_type == CONDITION){
+        if(tree->token == _AND){
+            printf("COND(&&)\n");
+            printTree(tree->child[0]);
+            printTree(tree->child[1]);
+        }
+        else if(tree->token == _OR){
+            printf("COND(||)\n");
+            printTree(tree->child[0]);
+            printTree(tree->child[1]);
+        }
+        else if(tree->token == _RELOP){
+            printf("COND(<)\n");
+            printTree(tree->child[0]);
+            printTree(tree->child[1]);
+        }
+        else if(tree->token ==  _LEROP){
+            printf("COND(>)\n");
+            printTree(tree->child[0]);
+            printTree(tree->child[1]);
+        }
+    }
+    else if (tree->ast_type == CONSTANT){
+        printf("CONSTANT : %d", tree->value);
+    }
+
+
+
+
+
+
+
+
+    cnt--;
 }

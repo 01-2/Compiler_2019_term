@@ -1,1 +1,1 @@
-ADD_EXECUTABLE(app.exe main.c symtable.c main.h common.c)
+ADD_EXECUTABLE(app.exe main.c symtable.c main.h common.c common.c)

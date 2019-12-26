@@ -48,7 +48,7 @@ id		([a-zA-Z]|[_])([a-zA-Z]|[0-9]|[_])*
 "-"         { yylval = strdup(yytext); return _MINUS; }
 "*"         { yylval = strdup(yytext); return _TIMES; }
 "<"         { yylval = strdup(yytext); return _RELOP; }
-">"         { yylval = strdup(yytext); return _RELOP; }
+">"         { yylval = strdup(yytext); return _LEROP; }
 "&&"        { yylval = strdup(yytext); return _AND; }
 "||"        { yylval = strdup(yytext); return _OR; }
 
