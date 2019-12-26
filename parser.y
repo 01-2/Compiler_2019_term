@@ -7,6 +7,8 @@
 	int yyerror(const char *msg);
 	int yylex();
 	int yyparse();
+
+	node *root;
 %}
 %token _VAR
 %token _ARR
@@ -45,7 +47,8 @@
 
 %%
 
-PROG : FUNC MAIN
+PROG : FUNC MAIN { 
+		}
 	 ;
 MAIN : _VOID _MAIN_F _RSQUARE_BRACKET { }
 	 ;
@@ -64,20 +67,24 @@ STMT : STMT _SEMICOLON STMT { }
 	 | _ARR EXP _RSQUARE_BRACKET _ASSIGN EXP _SEMICOLON { }
 	 ;
 
-EXP : EXP _PLUS EXP _SEMICOLON { }
-	| EXP _MINUS EXP _SEMICOLON { }
-	| EXP _TIMES EXP _SEMICOLON { }
-	| EXP _RELOP EXP _SEMICOLON { }
-	| EXP _AND EXP _SEMICOLON { }
-	| EXP _OR EXP _SEMICOLON { }
-	| EXP _LSQUARE_BRACKET EXP _RSQUARE_BRACKET _SEMICOLON { }
-	| _LPAREN EXP _RPAREN _SEMICOLON { }
-	| EXP _PLUS_PLUS _SEMICOLON { }
-	| EXP _MINUS_MINUS _SEMICOLON { }
-	| _NOTB EXP _SEMICOLON { }
-	| _NOT EXP _SEMICOLON { }
-	| _VAR _SEMICOLON { }
-	| _NUM { }
+EXP : EXP _PLUS EXP _SEMICOLON { $$ = mkBExpNode(PLUS, $1, $3); }
+	| EXP _MINUS EXP _SEMICOLON { $$ = mkBExpNode(MINUS, $1, $3); }
+	| EXP _TIMES EXP _SEMICOLON { $$ = mkBExpNode(TIME, $1, $3); }
+	| EXP _RELOP EXP _SEMICOLON { 
+		if($2 == '>') $$ = mkBExpNode(GT, $1, $3);
+		else $$ = mkBExpNode(LT, $1, $3);
+	}
+	| EXP _AND EXP _SEMICOLON { $$ = mkBExpNode(AND, $1, $3); }
+	| EXP _OR EXP _SEMICOLON { $$ = mkBExpNode(OR, $1, $3); }
+	| EXP _LSQUARE_BRACKET EXP _RSQUARE_BRACKET _SEMICOLON { // case ???? 
+	}
+	| _LPAREN EXP _RPAREN _SEMICOLON { $$ = mkUExpNode(PARREN, $2); }
+	| EXP _PLUS_PLUS _SEMICOLON { $$ = mkUExpNode(DPLUS, $1); }
+	| EXP _MINUS_MINUS _SEMICOLON { $$ = mkUExpNode(DMINUS, $1); }
+	| _NOTB EXP _SEMICOLON { $$ = mkUExpNode(NOTB, $2); }
+	| _NOT EXP _SEMICOLON { $$ = mkUExpNode(NOT, $2); }
+	| _VAR _SEMICOLON { $$ = mkLeaf(INT, $1, NULL); }
+	| _NUM _SEMICOLON { $$ = mkLeaf(INT, NULL, $1); }
 	;
 
 VARL : _VAR _COMMA _VAR { }
