@@ -15,6 +15,7 @@ id		([a-zA-Z]|[_])([a-zA-Z]|[0-9]|[_])*
 ("int"|"void"){id}("(") { yylval = strdup(yytext); return _START_METHOD_DECL; }
 
 {digit}+	{ yylval.ival = atoi(yytext); return _NUM; }
+{id}		{ yylval = strdup(yytext); return _VAR_ID; }
 {id}"["		{ yylval = strdup(yytext); return _ARRAY_VALUE; }
 {space}+	{ }
 
