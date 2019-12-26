@@ -4,12 +4,14 @@
 
 extern list *l;
 
-node* createMainDeclNode(int tok, node** stmt){
+node* createMainDeclNode(int tok, int stmt_cnt, node** stmt){
     node* new_node = (node *)malloc(sizeof(node));
     new_node->token = tok;
     new_node->sym = FUNCTION;
-    new_node->type = type;
-    new_node->child = (node **)malloc(sizeof(node) * (func_param_cnt));
+    new_node->ast_type = MAINDECL;
+    new_node->type = VOID;
+
+    new_node->child = (node **)malloc(sizeof(node *) * (func_param_cnt));
     for(int i = 0; i< 3 + func_param_cnt; i++)
         new_node->child[i] = n[i];
 
@@ -74,7 +76,20 @@ returnType Name  param_num param[0] ... param[param_num]
 
         return new_node;
  //   }
+}
 
+node* createFuncBodyNode(int tok, int type, int stmt_cnt, node** stmt){
+    node *n = malloc(sizeof(node));
+    n->token = tok;
+    n->sym = FUNCTION;
+    n->type = type;
+    n->ast_type = FUNCBODY;
+
+    n->child = malloc(sizeof(node *) * stmt_cnt);
+    for(int i = 0; i < stmt_cnt; i++)
+        n->child[i] = stmt[i];
+
+    return node;
 }
 
 node* createArithmeticNode(int tok, int type, node* n1, node* n2) { // plus, minus, div, mul, assign
@@ -90,6 +105,9 @@ node* createArithmeticNode(int tok, int type, node* n1, node* n2) { // plus, min
 
     return n;
 }
+
+
+
 
 node* createUnaryArithmeticNode(int tok, node* n1) {
     node* n = (node*)malloc(sizeof(node));
@@ -113,6 +131,8 @@ node* createAffixNode(int tok, node* n1) {
     node* n = malloc(sizeof(node));
 
     n->token = tok;
+    n->ast_type = AFFIX;
+
     n->child = malloc(sizeof(node));
     n->child[0] = n1;
 
@@ -120,10 +140,18 @@ node* createAffixNode(int tok, node* n1) {
 }
 
 node* createConditionNode(int tok, node* n1, node* n2) { // <, >, ||, &&, ==
-    node* n = malloc(sizeof
+    node* n = malloc(sizeof(node *) * 2);
+
+    n->token = tok;
+    n->ast_typt = CONDITION;
+    n->child[0] = n1;
     n->child[1] = n2;
 
     return n;
+}
+
+node* createIfDecl(int tok, node* condition, node*){
+
 }
 
 node* createVarDeclNode(TYPE type, int tok, int size, char *var_name, void* value){ //as leaf
@@ -165,6 +193,7 @@ node* createConstNode(TYPE type, int tok, int size, void* value) {
     node* n = (node*)malloc(sizeof(node));
     n->type = type;
     n->value = (int *)value;
+
 
     return n;
 }

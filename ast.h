@@ -14,6 +14,7 @@ typedef enum AST_TYPE{
     ARITH,
     UNARY,
     CONDITION,
+    IFDECL,
     AFFIX
 }AST_TYPE;
 
