@@ -6,7 +6,20 @@
 #include "common.h"
 //#include "y.tab.h"
 
+typedef enum AST_TYPE{
+    FUNCDECL,
+    FUNCBODY,
+    MAINDECL,
+    VARDECL,
+    ARITH,
+    UNARY,
+    CONDITION,
+    AFFIX
+}AST_TYPE;
+
+
 typedef struct node{
+    AST_TYPE ast_type;
     struct node **child;
 	int child_cnt;
 	int token;

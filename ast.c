@@ -4,6 +4,19 @@
 
 extern list *l;
 
+node* createMainDeclNode(int tok, node** stmt){
+    node* new_node = (node *)malloc(sizeof(node));
+    new_node->token = tok;
+    new_node->sym = FUNCTION;
+    new_node->type = type;
+    new_node->child = (node **)malloc(sizeof(node) * (func_param_cnt));
+    for(int i = 0; i< 3 + func_param_cnt; i++)
+        new_node->child[i] = n[i];
+
+    return new_node;
+}
+
+
 node* createFuncDeclNode(int tok, TYPE type, char* name, node** n){
     /*           funcDecl
     /         |      |     \        \
@@ -53,8 +66,9 @@ returnType Name  param_num param[0] ... param[param_num]
         node* new_node = (node *)malloc(sizeof(node));
         new_node->token = tok;
         new_node->sym = FUNCTION;
+        new_node->ast_type = FUNCDECL;
         new_node->type = type;
-        new_node->child = (node **)malloc(sizeof(node) * (3 + func_param_cnt));
+        new_node->child = (node **)malloc(sizeof(node) * (func_param_cnt));
         for(int i = 0; i< 3 + func_param_cnt; i++)
             new_node->child[i] = n[i];
 
@@ -68,6 +82,7 @@ node* createArithmeticNode(int tok, int type, node* n1, node* n2) { // plus, min
     
     n->token = tok;
     n->type = type;
+    n->ast_type = ARITH;
     
     n->child = malloc(sizeof(node) * 2);
     n->child[0] = n1;
@@ -80,9 +95,16 @@ node* createUnaryArithmeticNode(int tok, node* n1) {
     node* n = (node*)malloc(sizeof(node));
 
     n->token = tok;
+    n->ast_type = UNARY;
 
     n->child = malloc(sizeof(node));
-    n->child[0] = n1;
+    n->ch(node));
+
+    n->token = tok;
+    n->type = type;
+
+    n->child = malloc(sizeof(node) * 2);
+    n->child[0] = n1;ild[0] = n1;
 
     return n;
 }
@@ -98,13 +120,7 @@ node* createAffixNode(int tok, node* n1) {
 }
 
 node* createConditionNode(int tok, node* n1, node* n2) { // <, >, ||, &&, ==
-    node* n = malloc(sizeof(node));
-
-    n->token = tok;
-    n->type = type;
-
-    n->child = malloc(sizeof(node) * 2);
-    n->child[0] = n1;
+    node* n = malloc(sizeof
     n->child[1] = n2;
 
     return n;
@@ -155,6 +171,7 @@ node* createConstNode(TYPE type, int tok, int size, void* value) {
 
 
 void printTree(node *tree, int tctr){
+    /*
 	int i = 0;
 	for(i = 0; i < tctr; i++) printf("\t");
 	if((tree->token > -1) && (tree->token < 10))
@@ -170,4 +187,7 @@ void printTree(node *tree, int tctr){
 		printTree(tree->left, tctr+1);
 	if (tree->right)
 		printTree(tree->right, tctr+1);
+     */
+
+
 }
